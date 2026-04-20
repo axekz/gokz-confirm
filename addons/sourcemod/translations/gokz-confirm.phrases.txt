@@ -1,0 +1,128 @@
+"Phrases"
+{
+    "rules title"
+    {
+        "en"        "Rules Confirmation"
+        "chi"       "规则确认"
+        "ru"        "Подтверждение правил"
+    }
+
+    "rules warning"
+    {
+        "en"        "Not follow those rules will result a ban"
+        "chi"       "不遵守这些规则将导致封禁"
+        "ru"        "Нарушение этих правил приведет к бану"
+    }
+
+    "rules rule 1"
+    {
+        "en"        "1. Do not exploit unbalanced bugs to abuse the leaderboard.\n   Applies to both map bugs and plugin bugs."
+        "chi"       "1. 不要利用失衡的 bug 来刷排行榜。（包括地图bug和插件）。"
+        "ru"        "1. Не используйте баги карты и плагина."
+    }
+
+    "rules rule 2"
+    {
+        "en"        "2. If you find a bug, DM an admin - do not exploit it."
+        "chi"       "2. 如果你发现bug，请私信管理员，而不是利用它。"
+        "ru"        "2. Нашли баг - сообщите админу."
+    }
+
+    "rules rule 3"
+    {
+        "en"        "3. Do not play on an alt account.\n   Abusing the leaderboard with an alt will result in a ban,\n   especially if you exploit."
+        "chi"       "3. 不要使用小号。用小号刷排行榜会被封禁，尤其是卡bug刷记录时。"
+        "ru"        "3. Альт-аккаунты запрещены."
+    }
+
+    "rules rule 4"
+    {
+        "en"        "4. Do not use cheats."
+        "chi"       "4. 不要使用外挂软件"
+        "ru"        "4. Не используйте читы."
+    }
+
+    "rules rule 5"
+    {
+        "en"        "5. Do not use infinite scroll wheels (e.g. Logitech G502)."
+        "chi"       "5. 不要使用无极滚轮（例如 罗技G502）。"
+        "ru"        "5. Без бесконечного колеса."
+    }
+
+    "rules rule 6"
+    {
+        "en"        "6. Do not play on someone else's account,\n   or let others play on your account."
+        "chi"       "6. 不要登录别人的账号游玩，也不要让别人登录你的账号游玩。"
+        "ru"        "6. Не играйте на чужом аккаунте."
+    }
+
+    "rules prompt"
+    {
+        "en"        "Type exactly in chat:"
+        "chi"       "请在聊天中准确输入："
+        "ru"        "Введите точно в чат:"
+    }
+
+    "confirm phrase"
+    {
+        "en"        "I won't exploit the bug to abuse the leaderboard"
+        "chi"       "我不会利用bug来刷记录"
+        "ru"        "Я не буду использовать баг для злоупотребления таблицей лидеров"
+    }
+
+    "rules reopened"
+    {
+        "en"        "Rules reopened. Read the center panel if you need a refresher."
+        "chi"       "规则已重新打开。如果你需要复习，请查看中间面板。"
+        "ru"        "Правила снова открыты. Если нужно освежить память, прочитайте центральную панель."
+    }
+
+    "rules move hint"
+    {
+        "en"        "Read the rules and type the final sentence before you start the timer."
+        "chi"       "阅读规则并输入最后一句话后才可以开始计时。"
+        "ru"        "Прочитайте правила и введите последнюю фразу перед стартом таймера."
+    }
+
+    "rules view hint"
+    {
+        "en"        "If you cannot see the rules clearly, use %s to switch between HUD and menu view."
+        "chi"       "如果你看不清规则，请使用 %s 在 HUD 和菜单视图之间切换。"
+        "ru"        "Если правила плохо видны, используйте %s, чтобы переключаться между HUD и меню."
+    }
+
+    "rules timer blocked"
+    {
+        "en"        "You must confirm the rules before starting the timer."
+        "chi"       "你必须先确认规则，才可以开始计时。"
+        "ru"        "Вы должны подтвердить правила перед стартом таймера."
+    }
+
+    "rules mode switched hud"
+    {
+        "en"        "Rules display switched to HUD view."
+        "chi"       "规则显示已切换为 HUD 视图。"
+        "ru"        "Отображение правил переключено на HUD."
+    }
+
+    "rules mode switched menu"
+    {
+        "en"        "Rules display switched to menu view."
+        "chi"       "规则显示已切换为菜单视图。"
+        "ru"        "Отображение правил переключено на меню."
+    }
+
+    "rules confirmed"
+    {
+        "en"        "Rules confirmed. Good luck and have fun."
+        "chi"       "规则已确认。祝你好运，玩得开心。"
+        "ru"        "Правила подтверждены. Удачи и приятной игры."
+    }
+
+    "rules accepted all"
+    {
+        "en"        "accepted the server rules."
+        "chi"       "已接受服务器规则。"
+        "ru"        "принял правила сервера."
+    }
+}
