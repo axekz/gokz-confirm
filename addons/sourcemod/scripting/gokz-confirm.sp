@@ -25,27 +25,7 @@
 
 #define PLUGIN_VERSION "1.0.0"
 #define DB_NAME "gokz_confirm"   // addons/sourcemod/data/sqlite/gokz_confirm.sq3
-#define RULES_VIEW_CHAT_COMMAND "!rulesview"
-#define RULES_HOLD_TIME 60.0
 #define REMINDER_TIME 60.0
-#define RULES_BLOCK_Y 0.25
-#define RULES_LINE_STEP 0.03
-#define RULES_PROMPT_GAP_LINES 2.0
-
-enum
-{
-    RulesHud_Title = 0,
-    RulesHud_Warning,
-    RulesHud_Rules,
-    RulesHud_Prompt,
-    RulesHud_Count
-};
-
-enum
-{
-    RulesDisplay_Hud = 0,
-    RulesDisplay_Menu
-};
 
 public Plugin myinfo =
 {
@@ -59,10 +39,8 @@ public Plugin myinfo =
 Database g_hDB = null;
 bool     g_bConfirmed[MAXPLAYERS + 1];
 bool     g_bChecked[MAXPLAYERS + 1];   // DB lookup completed
-int      g_iRulesDisplayMode[MAXPLAYERS + 1];
 int      g_iLastBlockedStartCourse[MAXPLAYERS + 1];
 Handle   g_hReminderTimer[MAXPLAYERS + 1];
-Handle   g_hRulesHud[RulesHud_Count];
 ArrayList g_aConfirmationPhrases = null;
 
 public void OnPluginStart()
@@ -71,11 +49,6 @@ public void OnPluginStart()
     LoadTranslations("gokz-confirm.phrases");
     LoadConfirmationPhrases();
 
-    for (int i = 0; i < RulesHud_Count; i++)
-    {
-        g_hRulesHud[i] = CreateHudSynchronizer();
-    }
-
     HookEvent("player_spawn", Event_PlayerSpawn, EventHookMode_Post);
 
     AddCommandListener(OnSayCommand, "say");
@@ -83,7 +56,6 @@ public void OnPluginStart()
 
     RegConsoleCmd("sm_rules",     Cmd_ShowRules,       "Show the server rules again");
     RegConsoleCmd("sm_confirm",   Cmd_ShowRules,       "Show the rules / confirmation panel");
-    RegConsoleCmd("sm_rulesview", Cmd_ToggleRulesView, "Toggle the rules display between HUD and menu view");
 
     InitDatabase();
 
@@ -150,7 +122,6 @@ public void OnClientPutInServer(int client)
 {
     g_bConfirmed[client] = false;
     g_bChecked[client]   = false;
-    g_iRulesDisplayMode[client] = RulesDisplay_Hud;
     g_iLastBlockedStartCourse[client] = -1;
     g_hReminderTimer[client] = null;
 }
@@ -161,7 +132,6 @@ public void OnClientDisconnect(int client)
     ClearRulesDisplay(client);
     g_bConfirmed[client] = false;
     g_bChecked[client]   = false;
-    g_iRulesDisplayMode[client] = RulesDisplay_Hud;
     g_iLastBlockedStartCourse[client] = -1;
 }
 
@@ -287,25 +257,16 @@ public void GOKZ_OnTeleportToStart_Post(int client, int course)
 void ShowRulesDisplay(int client, bool announceChat)
 {
     char title[128];
-    char warning[256];
     char rules[1024];
     char prompt[256];
     char confirmPhrase[256];
 
     GetTranslatedPhrase(client, "rules title", "Rules Confirmation", title, sizeof(title));
-    GetTranslatedPhrase(client, "rules warning", "Not following these rules will result in a ban.", warning, sizeof(warning));
     BuildRulesBody(client, rules, sizeof(rules));
     GetTranslatedPhrase(client, "rules prompt", "Type exactly in chat:", prompt, sizeof(prompt));
     GetConfirmationPhrase(client, confirmPhrase, sizeof(confirmPhrase));
 
-    if (g_iRulesDisplayMode[client] == RulesDisplay_Menu)
-    {
-        ShowRulesMenu(client, title, warning, rules, prompt, confirmPhrase);
-    }
-    else
-    {
-        ShowRulesHud(client, title, warning, rules, prompt, confirmPhrase);
-    }
+    ShowRulesMenu(client, title, rules, prompt, confirmPhrase);
 
     if (!announceChat)
     {
@@ -320,40 +281,15 @@ void ShowRulesDisplay(int client, bool announceChat)
     {
         GOKZ_PrintToChat(client, true, "{grey}%t", "rules move hint");
     }
-
-    GOKZ_PrintToChat(client, true, "{grey}%t", "rules view hint", RULES_VIEW_CHAT_COMMAND);
 }
 
-void ShowRulesHud(int client, const char[] title, const char[] warning, const char[] rules, const char[] prompt, const char[] confirmPhrase)
-{
-    char promptBlock[512];
-    float promptY;
-
-    CancelClientMenu(client, true);
-    FormatEx(promptBlock, sizeof(promptBlock), "%s\n\"%s\"", prompt, confirmPhrase);
-
-    promptY = RULES_BLOCK_Y + (float(CountLines(rules)) + RULES_PROMPT_GAP_LINES) * RULES_LINE_STEP;
-
-    SetHudTextParams(0.12, 0.13, RULES_HOLD_TIME, 255, 190, 70, 255);
-    ShowSyncHudText(client, g_hRulesHud[RulesHud_Title], "%s", title);
-
-    SetHudTextParams(0.12, 0.19, RULES_HOLD_TIME, 255, 0, 0, 255);
-    ShowSyncHudText(client, g_hRulesHud[RulesHud_Warning], "%s", warning);
-
-    SetHudTextParams(0.12, RULES_BLOCK_Y, RULES_HOLD_TIME, 255, 60, 60, 255);
-    ShowSyncHudText(client, g_hRulesHud[RulesHud_Rules], "%s", rules);
-
-    SetHudTextParams(0.12, promptY, RULES_HOLD_TIME, 255, 190, 70, 255);
-    ShowSyncHudText(client, g_hRulesHud[RulesHud_Prompt], "%s", promptBlock);
-}
-
-void ShowRulesMenu(int client, const char[] title, const char[] warning, const char[] rules, const char[] prompt, const char[] confirmPhrase)
+void ShowRulesMenu(int client, const char[] title, const char[] rules, const char[] prompt, const char[] confirmPhrase)
 {
     char menuTitle[2048];
     Menu menu = new Menu(MenuHandler_RulesMenu);
 
-    ClearRulesHud(client);
-    FormatEx(menuTitle, sizeof(menuTitle), "%s\n \n%s\n \n%s\n \n%s\n\"%s\"", title, warning, rules, prompt, confirmPhrase);
+    CancelClientMenu(client, true);
+    FormatEx(menuTitle, sizeof(menuTitle), "%s\n \n%s\n%s\n \n%s", title, prompt, confirmPhrase, rules);
 
     menu.SetTitle(menuTitle);
     menu.AddItem("", " ", ITEMDRAW_DISABLED);
@@ -411,32 +347,16 @@ void BuildRulesBody(int client, char[] buffer, int maxlen)
 
 void ClearRulesDisplay(int client)
 {
-    ClearRulesHud(client);
-
-    if (g_iRulesDisplayMode[client] == RulesDisplay_Menu)
-    {
-        CancelClientMenu(client, true);
-    }
-}
-
-void ClearRulesHud(int client)
-{
     if (!IsClientInGame(client))
     {
         return;
     }
 
-    for (int i = 0; i < RulesHud_Count; i++)
-    {
-        if (g_hRulesHud[i] != null)
-        {
-            ClearSyncHud(client, g_hRulesHud[i]);
-        }
-    }
+    CancelClientMenu(client, true);
 }
 
 // ---------------------------------------------------------------------------
-// Reminder timer - nag them every 15s until they confirm
+// Reminder timer - keep the rules menu visible until they confirm
 // ---------------------------------------------------------------------------
 
 void StartReminderTimer(int client)
@@ -587,21 +507,6 @@ void GetTranslatedPhrase(int target, const char[] phrase, const char[] fallback,
     strcopy(buffer, maxlen, fallback);
 }
 
-int CountLines(const char[] text)
-{
-    int lines = 1;
-
-    for (int i = 0; text[i] != '\0'; i++)
-    {
-        if (text[i] == '\n')
-        {
-            lines++;
-        }
-    }
-
-    return lines;
-}
-
 bool MatchesWantedPhrase(const char[] got, const char[] want)
 {
     return StrEqual(got, want, false) || MatchesLoosely(got, want);
@@ -688,48 +593,5 @@ public Action Cmd_ShowRules(int client, int args)
         return Plugin_Handled;
 
     ShowRulesDisplay(client, true);
-    return Plugin_Handled;
-}
-
-public Action Cmd_ToggleRulesView(int client, int args)
-{
-    if (client <= 0 || !IsClientInGame(client))
-        return Plugin_Handled;
-
-    if (args > 0)
-    {
-        char arg[16];
-        GetCmdArg(1, arg, sizeof(arg));
-
-        if (StrEqual(arg, "hud", false))
-        {
-            g_iRulesDisplayMode[client] = RulesDisplay_Hud;
-        }
-        else if (StrEqual(arg, "menu", false) || StrEqual(arg, "info", false))
-        {
-            g_iRulesDisplayMode[client] = RulesDisplay_Menu;
-        }
-        else
-        {
-            g_iRulesDisplayMode[client] = (g_iRulesDisplayMode[client] == RulesDisplay_Hud) ? RulesDisplay_Menu : RulesDisplay_Hud;
-        }
-    }
-    else
-    {
-        g_iRulesDisplayMode[client] = (g_iRulesDisplayMode[client] == RulesDisplay_Hud) ? RulesDisplay_Menu : RulesDisplay_Hud;
-    }
-
-    ShowRulesDisplay(client, false);
-
-    if (g_iRulesDisplayMode[client] == RulesDisplay_Menu)
-    {
-        GOKZ_PrintToChat(client, true, "{grey}%t", "rules mode switched menu");
-    }
-    else
-    {
-        GOKZ_PrintToChat(client, true, "{grey}%t", "rules mode switched hud");
-    }
-
-    GOKZ_PrintToChat(client, true, "{grey}%t", "rules view hint", RULES_VIEW_CHAT_COMMAND);
     return Plugin_Handled;
 }

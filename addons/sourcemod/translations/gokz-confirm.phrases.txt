@@ -7,13 +7,6 @@
         "ru"        "Подтверждение правил"
     }
 
-    "rules warning"
-    {
-        "en"        "Not follow those rules will result a ban"
-        "chi"       "不遵守这些规则将导致封禁"
-        "ru"        "Нарушение этих правил приведет к бану"
-    }
-
     "rules rule 1"
     {
         "en"        "1. Do not exploit unbalanced bugs to abuse the leaderboard.\n   Applies to both map bugs and plugin bugs."
@@ -72,9 +65,9 @@
 
     "rules reopened"
     {
-        "en"        "Rules reopened. Read the center panel if you need a refresher."
-        "chi"       "规则已重新打开。如果你需要复习，请查看中间面板。"
-        "ru"        "Правила снова открыты. Если нужно освежить память, прочитайте центральную панель."
+        "en"        "Rules reopened. Read the menu if you need a refresher."
+        "chi"       "规则已重新打开。如果你需要复习，请查看菜单。"
+        "ru"        "Правила снова открыты. Если нужно освежить память, прочитайте меню."
     }
 
     "rules move hint"
@@ -84,32 +77,11 @@
         "ru"        "Прочитайте правила и введите последнюю фразу перед стартом таймера."
     }
 
-    "rules view hint"
-    {
-        "en"        "If you cannot see the rules clearly, use %s to switch between HUD and menu view."
-        "chi"       "如果你看不清规则，请使用 %s 在 HUD 和菜单视图之间切换。"
-        "ru"        "Если правила плохо видны, используйте %s, чтобы переключаться между HUD и меню."
-    }
-
     "rules timer blocked"
     {
         "en"        "You must confirm the rules before starting the timer."
         "chi"       "你必须先确认规则，才可以开始计时。"
         "ru"        "Вы должны подтвердить правила перед стартом таймера."
-    }
-
-    "rules mode switched hud"
-    {
-        "en"        "Rules display switched to HUD view."
-        "chi"       "规则显示已切换为 HUD 视图。"
-        "ru"        "Отображение правил переключено на HUD."
-    }
-
-    "rules mode switched menu"
-    {
-        "en"        "Rules display switched to menu view."
-        "chi"       "规则显示已切换为菜单视图。"
-        "ru"        "Отображение правил переключено на меню."
     }
 
     "rules confirmed"

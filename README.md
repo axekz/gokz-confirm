@@ -17,8 +17,8 @@ exact confirmation phrase in chat before they can start.
 
 - Blocks `GOKZ_OnTimerStart` for unconfirmed players
 - Shows the rules again on spawn until confirmation
-- Supports HUD and menu display modes
-- Adds `sm_rules`, `sm_confirm`, and `sm_rulesview`
+- Shows the rules in the menu title only
+- Adds `sm_rules` and `sm_confirm`
 - Persists confirmations in SQLite at `addons/sourcemod/data/sqlite/gokz_confirm.sq3`
 
 ## Requirements
